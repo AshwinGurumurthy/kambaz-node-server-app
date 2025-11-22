@@ -22,6 +22,6 @@ export default function EnrollmentRoutes(app, db) {
         res.json(enrollments);
     };
     app.post("/api/courses/:courseId/enroll", enrollUserInCourse);
-    app.delete("/api/courses/:courseId/unenroll", unenrollUserFromCourse);
+    app.post("/api/courses/:courseId/unenroll", unenrollUserFromCourse);
     app.get("/api/users/:userId/enrollments", findEnrollmentsForUser);
 }
