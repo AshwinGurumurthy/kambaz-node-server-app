@@ -15,7 +15,6 @@ export default function EnrollmentRoutes(app, db) {
         const enrollments = dao.unenrollUserFromCourse(userId, courseId);
         res.json(enrollments);
     };
-
-    app.post("/api/users/:userId/courses/:courseId/enroll", enrollUserInCourse);
-    app.delete("/api/users/:userId/courses/:courseId/unenroll", unenrollUserFromCourse);
+    app.post("/api/courses/:courseId/enroll", enrollUserInCourse);
+    app.delete("/api/courses/:courseId/unenroll", unenrollUserFromCourse);
 }
