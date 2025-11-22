@@ -15,7 +15,11 @@ return newEnrollment;
 return db.enrollments;
   }
 
+  function findEnrollmentsForUser(userId) {
+  return db.enrollments.filter(e => e.user === userId);
+}
+
   
-  return { enrollUserInCourse, unenrollUserFromCourse };
+  return { enrollUserInCourse, unenrollUserFromCourse, findEnrollmentsForUser};
 }
 
