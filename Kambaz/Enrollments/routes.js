@@ -9,6 +9,14 @@ export default function EnrollmentRoutes(app, db) {
         res.json(enrollments);
     };
 
+    const deleteCourse = async (req, res) => {
+   const { courseId } = req.params;
+   await enrollmentsDao.unenrollAllUsersFromCourse(courseId);
+   const status = await dao.deleteCourse(courseId);
+   res.send(status);
+ };
+
+
     const unenrollUserFromCourse = (req, res) => {
         const {courseId} = req.params;
         const userId = req.session["currentUser"]._id;
