@@ -20,12 +20,20 @@ async function findCoursesForUser(userId) {
 
 
  async function enrollUserInCourse(userId, courseId) {
-   return model.create({
-     user: userId,
-     course: courseId,
-     _id: `${userId}-${courseId}`,
-   });
- }
+  const _id = `${userId}-${courseId}`;
+
+  const existing = await model.findById(_id);
+  if (existing) {
+    return existing; 
+  }
+
+  return model.create({
+    _id,
+    user: userId,
+    course: courseId,
+  });
+}
+
  async function unenrollUserFromCourse(user, course) {
    return model.deleteOne({ user, course });
  }
