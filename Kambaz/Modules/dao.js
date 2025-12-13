@@ -4,8 +4,13 @@ import moduleModel from "./model.js";
 export default function ModulesDao() {
 
   async function findModulesForCourse(courseId) {
-   return moduleModel.find({ course: courseId });
- }
+  const course = await model.findById(courseId);
+  const embeddedModules = course ? course.modules : [];
+
+  const legacyModules = await moduleModel.find({ course: courseId });
+
+  return [...legacyModules, ...embeddedModules];
+}
 
  async function createModule(courseId, module) {
    const newModule = { ...module, _id: uuidv4() };
@@ -17,21 +22,41 @@ export default function ModulesDao() {
  }
 
  async function deleteModule(courseId, moduleId) {
-   const status = await model.updateOne(
-     { _id: courseId },
-     { $pull: { modules: { _id: moduleId } } }
-   );
-   return status;
+  const status = await model.updateOne(
+    { _id: courseId, "modules._id": moduleId },
+    { $pull: { modules: { _id: moduleId } } }
+  );
+
+  if (status.modifiedCount > 0) {
+    return status;
+  }
+
+  const legacyStatus = await moduleModel.deleteOne({
+    _id: moduleId,
+    course: courseId,
+  });
+
+  return legacyStatus;
 }
 
 async function updateModule(courseId, moduleId, moduleUpdates) {
   const course = await model.findById(courseId);
-  if (!course) return null;
-  const module = course.modules.id(moduleId);
-  if (!module) return null;
-  Object.assign(module, moduleUpdates);
-  await course.save();
-  return module;
+  if (course) {
+    const embeddedModule = course.modules.id(moduleId);
+    if (embeddedModule) {
+      Object.assign(embeddedModule, moduleUpdates);
+      await course.save();
+      return embeddedModule.toObject();
+    }
+  }
+
+  const legacyModule = await moduleModel.findByIdAndUpdate(
+    moduleId,
+    { $set: moduleUpdates },
+    { new: true }
+  );
+
+  return legacyModule ? legacyModule.toObject() : null;
 }
 
 
