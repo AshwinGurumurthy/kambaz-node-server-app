@@ -15,6 +15,12 @@ import ModulesRoutes from './Kambaz/Modules/routes.js';
 import AssignmentRoutes from './Kambaz/Assignments/routes.js';
 import EnrollmentRoutes from './Kambaz/Enrollments/routes.js';
 
+import PazzaAnswerRoutes from './Pazza/Answers/routes.js';
+import PazzaDashboardRoutes from './Pazza/Dashboard/routes.js';
+import PazzaFolderRoutes from './Pazza/Folders/routes.js';
+import FollowupRoutes from './Pazza/Followup/routes.js';
+import PostRoutes from './Pazza/Posts/routes.js';
+import ReplyRoutes from './Pazza/Replies/routes.js';
 
 const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz"
 mongoose.connect(CONNECTION_STRING);
@@ -50,6 +56,13 @@ CourseRoutes(app, db);
 ModulesRoutes(app, db);
 AssignmentRoutes(app, db);
 EnrollmentRoutes(app, db);
+
+PazzaAnswerRoutes(app);
+PazzaDashboardRoutes(app);
+PazzaFolderRoutes(app);
+FollowupRoutes(app);
+PostRoutes(app);
+ReplyRoutes(app);
 
 Lab5(app)
 Hello(app)
